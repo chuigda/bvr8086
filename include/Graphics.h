@@ -141,8 +141,10 @@ void BvrDraw3D(BvrFramebuffer *pFramebuffer,
  * @param pIndices 索引数组
  * @param nVertices 顶点数量
  * @param nIndices 索引数量
- * @param pPixelDataStorage 用于保存顶点着色器结果的缓冲区，可为 NULL，
- *        若不为 NULL，则大小应为 pPipeline->pixelDataStride * nVertices
+ * @param pPixelDataStorage 用于保存顶点着色器结果的缓冲区；
+ *        若不为 NULL 则大小应为 pPipeline->pixelDataStride * nVertices；
+ *        若为 NULL 则顶点着色器结果将存储于 alloca 分配的栈空间中，
+ *        可能产生重复计算，影响性能
  */
 void BvrDraw3DIndirect(BvrFramebuffer *pFramebuffer,
                        BvrDepthBuffer *pDepthBuffer,
