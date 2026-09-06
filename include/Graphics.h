@@ -20,7 +20,8 @@ typedef struct {
     uint32_t framebuffer[0];
 } BvrFramebuffer;
 
-int16_t BvrDetectGraphics(BvrGraphicsMode *pMode, uint16_t nMode);
+int16_t BvrDetectGraphics(BvrGraphicsMode *pMode, uint16_t nMode,
+                          uint16_t offset);
 BvrFramebuffer* BvrInitGraphics(BvrGraphicsMode const *pMode);
 void BvrSwapBuffers(BvrFramebuffer const *pFramebuffer);
 void BvrCloseGraphics(void);
