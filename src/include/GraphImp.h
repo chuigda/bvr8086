@@ -3,6 +3,8 @@
 
 #include "Graphics.h"
 
+#include <assert.h>
+
 __attribute__((always_inline)) static inline
 void BvrImpPutPixel(BvrFramebuffer *pFramebuffer, uint16_t x, uint16_t y,
                     float color[3]) {
@@ -44,6 +46,7 @@ void BvrImpPutPixel(BvrFramebuffer *pFramebuffer, uint16_t x, uint16_t y,
             pFramebuffer->framebuffer[offset] = (r << 16) | (g << 8) | b;
             break;
         }
+        default: assert(false && "Unsupported color depth");
     }
 }
 
