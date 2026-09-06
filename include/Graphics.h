@@ -72,14 +72,13 @@ BvrDepthBuffer *BvrCreateDepthBuffer(BvrFramebuffer const *pFramebuffer);
 void BvrDraw3D(BvrFramebuffer *pFramebuffer,
                BvrDepthBuffer *pDepthBuffer,
                BvrGraphicsPipeline const *pPipeline,
-               void const *pVertices, void *pVertexDataStorage,
-               uint32_t nVertices);
-
+               void const *pVertices, uint32_t nVertices);
 void BvrDraw3DIndirect(BvrFramebuffer *pFramebuffer,
                        BvrDepthBuffer *pDepthBuffer,
                        BvrGraphicsPipeline const *pPipeline,
                        void const *pVertices, uint16_t const *pIndices,
-                       void *pVertexDataStorage, uint32_t nIndices);
+                       uint32_t nVertices, uint32_t nIndices,
+                       void *pPixelDataStorage);
 
 #ifdef __cplusplus
 } /* extern "C" */
