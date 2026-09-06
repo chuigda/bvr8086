@@ -28,13 +28,19 @@ void BvrCloseGraphics(void);
 
 typedef bool (*BvrVertexShader)(void const *pUniform, void const *pVertex,
                                 float (*pPosition)[4], void *pPixelData);
-typedef void (*BvrInterpolate)(void const (*pPixelData)[3],
+typedef void (*BvrInterpolate)(void const* (*pPixelData)[3],
                                float const (*pBarycentric)[3],
                                void *pInterpolatedData);
 typedef bool (*BvrFragmentShader)(void const *pUniform,
                                   float const (*pPosition)[4],
                                   void const* pPixelData,
                                   float (*pColor)[3]);
+
+typedef enum {
+    BVR_CULL_NONE = 0,
+    BVR_CULL_CCW = 1,
+    BVR_CULL_CW = 2
+} BvrCullMode;
 
 typedef struct {
     BvrVertexShader vertexShader;
@@ -44,6 +50,7 @@ typedef struct {
 
     uint16_t vertexStride;
     uint16_t pixelDataStride;
+    BvrCullMode cullMode;
     uint32_t pixelDataBuffer[0];
 } BvrGraphicsPipeline;
 
@@ -52,7 +59,8 @@ BvrGraphicsPipeline BvrCreatePipeline(BvrVertexShader vertexShader,
                                       BvrFragmentShader fragmentShader,
                                       void *pUniform,
                                       uint16_t vertexStride,
-                                      uint16_t pixelDataStride);
+                                      uint16_t pixelDataStride,
+                                      BvrCullMode cullMode);
 
 typedef struct {
     BvrGraphicsMode mode;
