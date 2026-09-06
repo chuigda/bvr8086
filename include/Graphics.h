@@ -28,7 +28,8 @@ typedef struct {
  * @param pMode 模式数组
  * @param nMode 数组容量
  * @param offset 起始偏移量
- * @return 找到的支持模式数量
+ * @return 找到的支持模式数量，失败返回负数；
+ *         若返回的数量少于 nMode，则表示所有支持的模式已经遍历完毕
  */
 int16_t BvrDetectGraphics(BvrGraphicsMode *pMode, uint16_t nMode,
                           uint16_t offset);
@@ -47,7 +48,7 @@ BvrFramebuffer* BvrInitGraphics(BvrGraphicsMode const *pMode);
 void BvrSwapBuffers(BvrFramebuffer const *pFramebuffer);
 
 /**
- * 关闭图形系统并释放资源
+ * 关闭图形系统
  */
 void BvrCloseGraphics(void);
 
