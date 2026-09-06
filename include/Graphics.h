@@ -9,18 +9,18 @@ extern "C" {
 #endif
 
 typedef struct {
-    uint16_t nWidth;
-    uint16_t nHeight;
-    uint8_t bColorDepth;
-    uint8_t bModeID;
+    uint16_t modeId;
+    uint16_t width;
+    uint16_t height;
+    uint8_t colorDepth;
 } BvrGraphicsMode;
 
 typedef struct {
     BvrGraphicsMode mode;
-    uint16_t buffer[0];
+    uint32_t framebuffer[0];
 } BvrFramebuffer;
 
-int BvrDetectGraphics(BvrGraphicsMode *pMode, uint16_t nMode);
+int16_t BvrDetectGraphics(BvrGraphicsMode *pMode, uint16_t nMode);
 BvrFramebuffer* BvrInitGraphics(BvrGraphicsMode const *pMode);
 void BvrSwapBuffers(BvrFramebuffer const *pFramebuffer);
 void BvrCloseGraphics(void);
