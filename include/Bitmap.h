@@ -9,7 +9,7 @@ extern "C" {
 #endif
 
 /** 位图结构体 */
-typedef struct {
+typedef struct stBvrBitmap {
     uint16_t width;        /**< 宽度（像素） */
     uint16_t height;       /**< 高度（像素） */
     uint8_t colorDepth;    /**< 色深（位） */

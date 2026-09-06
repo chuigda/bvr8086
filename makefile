@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
 
-CFLAGS_RAKV = -Iinclude
+CFLAGS_BVR = -Iinclude -Isrc/include
+HEADERS = $(wildcard include/*.h) $(wildcard src/include/*.h)
 SRCS = Main.c $(wildcard src/*.c)
 OBJS = $(SRCS:.c=.obj)
 TARGET = bvr8086.exe
@@ -9,11 +10,11 @@ all: $(TARGET)
 
 $(TARGET): $(OBJS)
 	@printf '\t%s\t%s\n' 'LINK' $@
-	@$(CC) $(CFLAGS_RAKV) $(CFLAGS) -o $@ $(OBJS)
+	@$(CC) $(CFLAGS_BVR) $(CFLAGS) -o $@ $(OBJS)
 
-%.obj: %.c
+%.obj: %.c $(HEADERS)
 	@printf '\t%s\t%s\n' 'CC' $<
-	@$(CC) $(CFLAGS_RAKV) $(CFLAGS) -c -o $@ $<
+	@$(CC) $(CFLAGS_BVR) $(CFLAGS) -c -o $@ $<
 
 run: dosbox_c/$(TARGET)
 	@printf '\t%s\t%s\n' 'DOSBOX' $<

@@ -9,7 +9,7 @@ extern "C" {
 #endif
 
 /** 图形模式描述符 */
-typedef struct {
+typedef struct stBvrGraphicsMode {
     uint16_t modeId;      /**< 模式标识符 */
     uint16_t width;       /**< 宽度（像素） */
     uint16_t height;      /**< 高度（像素） */
@@ -18,7 +18,7 @@ typedef struct {
 } BvrGraphicsMode;
 
 /** 帧缓冲，存储 RGB888 像素 */
-typedef struct {
+typedef struct stBvrFramebuffer {
     BvrGraphicsMode mode;
     uint32_t framebuffer[0];
 } BvrFramebuffer;
@@ -51,6 +51,28 @@ void BvrSwapBuffers(BvrFramebuffer const *pFramebuffer);
  * 关闭图形系统
  */
 void BvrCloseGraphics(void);
+
+/**
+ * 在帧缓冲中绘制像素
+ * @param pFramebuffer 帧缓冲
+ * @param x 像素横坐标
+ * @param y 像素纵坐标
+ * @param color 像素颜色 RGB [0.0f, 1.0f] 
+ */
+void BvrPutPixel(BvrFramebuffer *pFramebuffer, uint16_t x, uint16_t y,
+                 float color[3]);
+
+typedef struct stBvrBitmap BvrBitmap;
+
+/**
+ * 在帧缓冲中绘制位图
+ * @param pFramebuffer 帧缓冲
+ * @param pBitmap 位图
+ * @param x 位图左上角横坐标
+ * @param y 位图左上角纵坐标
+ */
+void BvrPutBitmap(BvrFramebuffer *pFramebuffer, BvrBitmap const *pBitmap,
+                  uint16_t x, uint16_t y);
 
 /**
  * 顶点着色器：将顶点变换到 NDC 空间 [-1.0f, 1.0f] 并输出像素数据
@@ -88,14 +110,14 @@ typedef bool (*BvrFragmentShader)(void const *pUniform,
                                   float (*pColor)[3]);
 
 /** 背面剔除模式 */
-typedef enum {
+typedef enum eBvrCullMode {
     BVR_CULL_NONE = 0,  /**< 不剔除 */
     BVR_CULL_CCW = 1,   /**< 剔除逆时针三角形 */
     BVR_CULL_CW = 2     /**< 剔除顺时针三角形 */
 } BvrCullMode;
 
 /** 图形管线配置 */
-typedef struct {
+typedef struct stBvrGraphicsPipeline {
     BvrVertexShader vertexShader;      /**< 顶点着色器 */
     BvrInterpolate interpolate;        /**< 插值器 */
     BvrFragmentShader fragmentShader;  /**< 片段着色器 */
@@ -107,7 +129,7 @@ typedef struct {
 } BvrGraphicsPipeline;
 
 /** 深度缓冲 */
-typedef struct {
+typedef struct stBvrDepthBuffer {
     BvrGraphicsMode mode;
     float depthBuffer[0];
 } BvrDepthBuffer;
