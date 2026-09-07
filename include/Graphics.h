@@ -10,18 +10,18 @@ extern "C" {
 
 /** 图形模式描述符 */
 typedef struct stBvrGraphicsMode {
-    uint16_t modeId;      /**< 模式标识符 */
-    uint16_t width;       /**< 宽度（像素） */
-    uint16_t height;      /**< 高度（像素） */
-    uint8_t colorDepth;   /**< 色深（位） */
-    bool supported;       /**< 是否支持 */
+  uint16_t modeId;      /**< 模式标识符 */
+  uint16_t width;       /**< 宽度（像素） */
+  uint16_t height;      /**< 高度（像素） */
+  uint8_t colorDepth;   /**< 色深（位） */
+  bool supported;       /**< 是否支持 */
 } BvrGraphicsMode;
 
 /** 帧缓冲，存储 RGB888 像素 */
-typedef struct stBvrFramebuffer {
-    BvrGraphicsMode mode;
-    uint32_t framebuffer[0];
-} BvrFramebuffer;
+typedef struct stBvrFrameBuffer {
+  BvrGraphicsMode mode;
+  uint32_t framebuffer[0];
+} BvrFrameBuffer;
 
 /**
  * 检测可用的图形模式
@@ -39,13 +39,13 @@ int16_t BvrDetectGraphics(BvrGraphicsMode *pMode, uint16_t nMode,
  * @param pMode 要初始化的图形模式
  * @return 帧缓冲指针，失败返回 NULL；返回的帧缓冲使用 free() 释放
  */
-BvrFramebuffer* BvrInitGraphics(BvrGraphicsMode const *pMode);
+BvrFrameBuffer* BvrInitGraphics(BvrGraphicsMode const *pMode);
 
 /**
  * 将帧缓冲呈现到屏幕
- * @param pFramebuffer 帧缓冲
+ * @param pFrameBuffer 帧缓冲
  */
-void BvrSwapBuffers(BvrFramebuffer const *pFramebuffer);
+void BvrSwapBuffers(BvrFrameBuffer const *pFrameBuffer);
 
 /**
  * 关闭图形系统
@@ -54,24 +54,24 @@ void BvrCloseGraphics(void);
 
 /**
  * 在帧缓冲中绘制像素
- * @param pFramebuffer 帧缓冲
+ * @param pFrameBuffer 帧缓冲
  * @param x 像素横坐标
  * @param y 像素纵坐标
- * @param color 像素颜色 RGB [0.0f, 1.0f] 
+ * @param color 像素颜色 RGB [0.0f, 1.0f]
  */
-void BvrPutPixel(BvrFramebuffer *pFramebuffer, uint16_t x, uint16_t y,
+void BvrPutPixel(BvrFrameBuffer *pFrameBuffer, uint16_t x, uint16_t y,
                  float color[3]);
 
 typedef struct stBvrBitmap BvrBitmap;
 
 /**
  * 在帧缓冲中绘制位图
- * @param pFramebuffer 帧缓冲
+ * @param pFrameBuffer 帧缓冲
  * @param pBitmap 位图
  * @param x 位图左上角横坐标
  * @param y 位图左上角纵坐标
  */
-void BvrPutBitmap(BvrFramebuffer *pFramebuffer, BvrBitmap const *pBitmap,
+void BvrPutBitmap(BvrFrameBuffer *pFrameBuffer, BvrBitmap const *pBitmap,
                   uint16_t x, uint16_t y);
 
 /**
@@ -118,45 +118,45 @@ typedef enum eBvrCullMode {
 
 /** 图形管线配置 */
 typedef struct stBvrGraphicsPipeline {
-    BvrVertexShader vertexShader;      /**< 顶点着色器 */
-    BvrInterpolate interpolate;        /**< 插值器 */
-    BvrFragmentShader fragmentShader;  /**< 片段着色器 */
-    void *pUniform;                    /**< 统一变量 */
+  BvrVertexShader vertexShader;      /**< 顶点着色器 */
+  BvrInterpolate interpolate;        /**< 插值器 */
+  BvrFragmentShader fragmentShader;  /**< 片段着色器 */
+  void *pUniform;                    /**< 统一变量 */
 
-    uint16_t vertexStride;             /**< 顶点结构体大小（字节） */
-    uint16_t pixelDataStride;          /**< 像素数据大小（字节） */
-    BvrCullMode cullMode;              /**< 背面剔除模式 */
+  uint16_t vertexStride;             /**< 顶点结构体大小（字节） */
+  uint16_t pixelDataStride;          /**< 像素数据大小（字节） */
+  BvrCullMode cullMode;              /**< 背面剔除模式 */
 } BvrGraphicsPipeline;
 
 /** 深度缓冲 */
 typedef struct stBvrDepthBuffer {
-    BvrGraphicsMode mode;
-    float depthBuffer[0];
+  BvrGraphicsMode mode;
+  float depthBuffer[0];
 } BvrDepthBuffer;
 
 /**
  * 创建深度缓冲
- * @param pFramebuffer 对应的帧缓冲
+ * @param pFrameBuffer 对应的帧缓冲
  * @return 深度缓冲指针，失败返回 NULL；返回的深度缓冲使用 free() 释放
  */
-BvrDepthBuffer *BvrCreateDepthBuffer(BvrFramebuffer const *pFramebuffer);
+BvrDepthBuffer *BvrCreateDepthBuffer(BvrFrameBuffer const *pFrameBuffer);
 
 /**
  * 绘制 3D 图元（直接模式）
- * @param pFramebuffer 帧缓冲
+ * @param pFrameBuffer 帧缓冲
  * @param pDepthBuffer 深度缓冲
  * @param pPipeline 图形管线
  * @param pVertices 顶点数组
  * @param nVertices 顶点数量
  */
-void BvrDraw3D(BvrFramebuffer *pFramebuffer,
+void BvrDraw3D(BvrFrameBuffer *pFrameBuffer,
                BvrDepthBuffer *pDepthBuffer,
                BvrGraphicsPipeline const *pPipeline,
                void const *pVertices, uint32_t nVertices);
 
 /**
  * 绘制 3D 图元（索引模式）
- * @param pFramebuffer 帧缓冲
+ * @param pFrameBuffer 帧缓冲
  * @param pDepthBuffer 深度缓冲
  * @param pPipeline 图形管线
  * @param pVertices 顶点数组
@@ -168,7 +168,7 @@ void BvrDraw3D(BvrFramebuffer *pFramebuffer,
  *        若为 NULL 则顶点着色器结果将存储于 alloca 分配的栈空间中，
  *        可能产生重复计算，影响性能
  */
-void BvrDraw3DIndirect(BvrFramebuffer *pFramebuffer,
+void BvrDraw3DIndirect(BvrFrameBuffer *pFrameBuffer,
                        BvrDepthBuffer *pDepthBuffer,
                        BvrGraphicsPipeline const *pPipeline,
                        void const *pVertices, uint16_t const *pIndices,

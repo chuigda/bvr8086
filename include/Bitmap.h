@@ -10,10 +10,10 @@ extern "C" {
 
 /** 位图结构体 */
 typedef struct stBvrBitmap {
-    uint16_t width;        /**< 宽度（像素） */
-    uint16_t height;       /**< 高度（像素） */
-    uint8_t colorDepth;    /**< 色深（位） */
-    uint32_t pixelData[0]; /**< 像素数据，从上到下、从左到右存储 */
+  uint16_t width;        /**< 宽度（像素） */
+  uint16_t height;       /**< 高度（像素） */
+  uint8_t colorDepth;    /**< 色深（位） */
+  uint32_t pixelData[0]; /**< 像素数据，从上到下、从左到右存储 */
 } BvrBitmap;
 
 /**
