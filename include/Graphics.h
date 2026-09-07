@@ -121,7 +121,7 @@ typedef enum eBvrCullMode {
 /** 图形管线配置 */
 typedef struct stBvrGraphicsPipeline {
   BvrVertexShader vertexShader;      /**< 顶点着色器 */
-  BvrInterpolate interpolate;        /**< 插值器 */
+  BvrInterpolate interpolate;        /**< 插值器，为 NULL 则扁平插值 */
   BvrFragmentShader fragmentShader;  /**< 片段着色器 */
   void *pUniform;                    /**< 统一变量 */
 
