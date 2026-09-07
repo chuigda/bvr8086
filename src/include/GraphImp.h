@@ -8,13 +8,13 @@
 __attribute__((always_inline)) static inline
 void BvrImpPutPixel(BvrFrameBuffer *pFrameBuffer, uint16_t x, uint16_t y,
                     BvrColor3f color) {
-  if (x >= pFrameBuffer->mode.width || y >= pFrameBuffer->mode.height) {
+  if (x >= pFrameBuffer->width || y >= pFrameBuffer->height) {
     return;
   }
 
-  uint32_t offset = y * pFrameBuffer->mode.width + x;
+  uint32_t offset = y * pFrameBuffer->width + x;
 
-  switch (pFrameBuffer->mode.colorDepth) {
+  switch (pFrameBuffer->colorDepth) {
     case 8: {
       uint8_t r = (uint8_t)(color.r * 7.0f);
       uint8_t g = (uint8_t)(color.g * 7.0f);

@@ -2,7 +2,7 @@
 
 CFLAGS_BVR = -Iinclude -Isrc/include
 HEADERS = $(wildcard include/*.h) $(wildcard src/include/*.h)
-SRCS = Main.c $(wildcard src/*.c)
+SRCS = Main.c $(wildcard src/**/*.c)
 OBJS = $(SRCS:.c=.obj)
 TARGET = bvr8086.exe
 

@@ -19,9 +19,12 @@ typedef struct stBvrGraphicsMode {
   bool supported;       /**< 是否支持 */
 } BvrGraphicsMode;
 
-/** 帧缓冲，存储 RGB888 像素 */
+/** 帧缓冲 */
 typedef struct stBvrFrameBuffer {
-  BvrGraphicsMode mode;
+  uint16_t width;
+  uint16_t height;
+  uint8_t colorDepth;
+
   uint32_t framebuffer[0];
 } BvrFrameBuffer;
 
@@ -37,11 +40,25 @@ int16_t BvrDetectGraphics(BvrGraphicsMode *pMode, uint16_t nMode,
                           uint16_t offset);
 
 /**
- * 初始化图形系统并分配帧缓冲
+ * 初始化图形系统
  * @param pMode 要初始化的图形模式
+ */
+void BvrInitGraphics(BvrGraphicsMode const *pMode);
+
+/**
+ * 关闭图形系统
+ */
+void BvrCloseGraphics(void);
+
+/**
+ * 创建帧缓冲
+ * @param width 帧缓冲宽度
+ * @param height 帧缓冲高度
+ * @param colorDepth 帧缓冲色深
  * @return 帧缓冲指针，失败返回 NULL；返回的帧缓冲使用 free() 释放
  */
-BvrFrameBuffer* BvrInitGraphics(BvrGraphicsMode const *pMode);
+BvrFrameBuffer* BvrCreateFrameBuffer(uint16_t width, uint16_t height,
+                                     uint8_t colorDepth);
 
 /**
  * 将帧缓冲呈现到屏幕
@@ -49,10 +66,21 @@ BvrFrameBuffer* BvrInitGraphics(BvrGraphicsMode const *pMode);
  */
 void BvrSwapBuffers(BvrFrameBuffer const *pFrameBuffer);
 
+/** 深度缓冲 */
+typedef struct stBvrDepthBuffer {
+  uint16_t width;
+  uint16_t height;
+
+  float depthBuffer[0];
+} BvrDepthBuffer;
+
 /**
- * 关闭图形系统
+ * 创建深度缓冲
+ * @param width 深度缓冲宽度
+ * @param height 深度缓冲高度
+ * @return 深度缓冲指针，失败返回 NULL；返回的深度缓冲使用 free() 释放
  */
-void BvrCloseGraphics(void);
+BvrDepthBuffer *BvrCreateDepthBuffer(uint16_t width, uint16_t height);
 
 /**
  * 在帧缓冲中绘制像素
@@ -129,19 +157,6 @@ typedef struct stBvrGraphicsPipeline {
   uint16_t pixelDataStride;          /**< 像素数据大小（字节） */
   BvrCullMode cullMode;              /**< 背面剔除模式 */
 } BvrGraphicsPipeline;
-
-/** 深度缓冲 */
-typedef struct stBvrDepthBuffer {
-  BvrGraphicsMode mode;
-  float depthBuffer[0];
-} BvrDepthBuffer;
-
-/**
- * 创建深度缓冲
- * @param pFrameBuffer 对应的帧缓冲
- * @return 深度缓冲指针，失败返回 NULL；返回的深度缓冲使用 free() 释放
- */
-BvrDepthBuffer *BvrCreateDepthBuffer(BvrFrameBuffer const *pFrameBuffer);
 
 /**
  * 绘制 3D 图元（直接模式）

@@ -14,20 +14,6 @@ static void Barycentric(BvrVec4f const (*pPositions)[3],
                         BvrVec4f const *pPoint,
                         float (*pBarycentric)[3]);
 
-BvrDepthBuffer*
-BvrCreateDepthBuffer(BvrFrameBuffer const *pFrameBuffer) {
-  uint32_t size = (uint32_t)pFrameBuffer->mode.width
-                  * (uint32_t)pFrameBuffer->mode.height
-                  * sizeof(float);
-  BvrDepthBuffer *pDepthBuffer = malloc(sizeof(BvrDepthBuffer) + size);
-  if (!pDepthBuffer) {
-    return NULL;
-  }
-  memset(pDepthBuffer, 0, sizeof(BvrDepthBuffer) + size);
-  pDepthBuffer->mode = pFrameBuffer->mode;
-  return pDepthBuffer;
-}
-
 void BvrDraw3D(BvrFrameBuffer *pFrameBuffer,
                BvrDepthBuffer *pDepthBuffer,
                BvrGraphicsPipeline const *pPipeline,
