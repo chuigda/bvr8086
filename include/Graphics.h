@@ -28,44 +28,6 @@ typedef struct stBvrFrameBuffer {
   uint32_t framebuffer[0];
 } BvrFrameBuffer;
 
-/**
- * 检测可用的图形模式
- * @param pMode 模式数组
- * @param nMode 数组容量
- * @param offset 起始偏移量
- * @return 找到的支持模式数量，失败返回负数；
- *         若返回的数量少于 nMode，则表示所有支持的模式已经遍历完毕
- */
-int16_t BvrDetectGraphics(BvrGraphicsMode *pMode, uint16_t nMode,
-                          uint16_t offset);
-
-/**
- * 初始化图形系统
- * @param pMode 要初始化的图形模式
- */
-void BvrInitGraphics(BvrGraphicsMode const *pMode);
-
-/**
- * 关闭图形系统
- */
-void BvrCloseGraphics(void);
-
-/**
- * 创建帧缓冲
- * @param width 帧缓冲宽度
- * @param height 帧缓冲高度
- * @param colorDepth 帧缓冲色深
- * @return 帧缓冲指针，失败返回 NULL；返回的帧缓冲使用 free() 释放
- */
-BvrFrameBuffer* BvrCreateFrameBuffer(uint16_t width, uint16_t height,
-                                     uint8_t colorDepth);
-
-/**
- * 将帧缓冲呈现到屏幕
- * @param pFrameBuffer 帧缓冲
- */
-void BvrSwapBuffers(BvrFrameBuffer const *pFrameBuffer);
-
 /** 深度缓冲 */
 typedef struct stBvrDepthBuffer {
   uint16_t width;
@@ -74,35 +36,12 @@ typedef struct stBvrDepthBuffer {
   float depthBuffer[0];
 } BvrDepthBuffer;
 
-/**
- * 创建深度缓冲
- * @param width 深度缓冲宽度
- * @param height 深度缓冲高度
- * @return 深度缓冲指针，失败返回 NULL；返回的深度缓冲使用 free() 释放
- */
-BvrDepthBuffer *BvrCreateDepthBuffer(uint16_t width, uint16_t height);
-
-/**
- * 在帧缓冲中绘制像素
- * @param pFrameBuffer 帧缓冲
- * @param x 像素横坐标
- * @param y 像素纵坐标
- * @param color 像素颜色 RGB [0.0f, 1.0f]
- */
-void BvrPutPixel(BvrFrameBuffer *pFrameBuffer, uint16_t x, uint16_t y,
-                 BvrColor3f color);
-
-typedef struct stBvrBitmap BvrBitmap;
-
-/**
- * 在帧缓冲中绘制位图
- * @param pFrameBuffer 帧缓冲
- * @param pBitmap 位图
- * @param x 位图左上角横坐标
- * @param y 位图左上角纵坐标
- */
-void BvrPutBitmap(BvrFrameBuffer *pFrameBuffer, BvrBitmap const *pBitmap,
-                  uint16_t x, uint16_t y);
+/** 背面剔除模式 */
+typedef enum eBvrCullMode {
+  BVR_CULL_NONE = 0,  /**< 不剔除 */
+  BVR_CULL_CCW = 1,   /**< 剔除逆时针三角形 */
+  BVR_CULL_CW = 2     /**< 剔除顺时针三角形 */
+} BvrCullMode;
 
 /**
  * 顶点着色器：将顶点变换到 NDC 空间 [-1.0f, 1.0f] 并输出像素数据
@@ -139,13 +78,6 @@ typedef bool (*BvrFragmentShader)(void const *pUniform,
                                   void const* pPixelData,
                                   BvrColor3f *pColor);
 
-/** 背面剔除模式 */
-typedef enum eBvrCullMode {
-    BVR_CULL_NONE = 0,  /**< 不剔除 */
-    BVR_CULL_CCW = 1,   /**< 剔除逆时针三角形 */
-    BVR_CULL_CW = 2     /**< 剔除顺时针三角形 */
-} BvrCullMode;
-
 /** 图形管线配置 */
 typedef struct stBvrGraphicsPipeline {
   BvrVertexShader vertexShader;      /**< 顶点着色器 */
@@ -157,6 +89,74 @@ typedef struct stBvrGraphicsPipeline {
   uint16_t pixelDataStride;          /**< 像素数据大小（字节） */
   BvrCullMode cullMode;              /**< 背面剔除模式 */
 } BvrGraphicsPipeline;
+
+/**
+ * 检测可用的图形模式
+ * @param pMode 模式数组
+ * @param nMode 数组容量
+ * @param offset 起始偏移量
+ * @return 找到的支持模式数量，失败返回负数；
+ *         若返回的数量少于 nMode，则表示所有支持的模式已经遍历完毕
+ */
+int16_t BvrDetectGraphics(BvrGraphicsMode *pMode, uint16_t nMode,
+                          uint16_t offset);
+
+/**
+ * 初始化图形系统
+ * @param pMode 要初始化的图形模式
+ */
+void BvrInitGraphics(BvrGraphicsMode const *pMode);
+
+/**
+ * 关闭图形系统
+ */
+void BvrCloseGraphics(void);
+
+/**
+ * 将帧缓冲呈现到屏幕
+ * @param pFrameBuffer 帧缓冲
+ */
+void BvrSwapBuffers(BvrFrameBuffer const *pFrameBuffer);
+
+/**
+ * 创建帧缓冲
+ * @param width 帧缓冲宽度
+ * @param height 帧缓冲高度
+ * @param colorDepth 帧缓冲色深
+ * @return 帧缓冲指针，失败返回 NULL；返回的帧缓冲使用 free() 释放
+ */
+BvrFrameBuffer* BvrCreateFrameBuffer(uint16_t width, uint16_t height,
+                                     uint8_t colorDepth);
+
+/**
+ * 创建深度缓冲
+ * @param width 深度缓冲宽度
+ * @param height 深度缓冲高度
+ * @return 深度缓冲指针，失败返回 NULL；返回的深度缓冲使用 free() 释放
+ */
+BvrDepthBuffer *BvrCreateDepthBuffer(uint16_t width, uint16_t height);
+
+/**
+ * 在帧缓冲中绘制像素
+ * @param pFrameBuffer 帧缓冲
+ * @param x 像素横坐标
+ * @param y 像素纵坐标
+ * @param color 像素颜色 RGB [0.0f, 1.0f]
+ */
+void BvrPutPixel(BvrFrameBuffer *pFrameBuffer, uint16_t x, uint16_t y,
+                 BvrColor3f color);
+
+typedef struct stBvrBitmap BvrBitmap;
+
+/**
+ * 在帧缓冲中绘制位图
+ * @param pFrameBuffer 帧缓冲
+ * @param pBitmap 位图
+ * @param x 位图左上角横坐标
+ * @param y 位图左上角纵坐标
+ */
+void BvrPutBitmap(BvrFrameBuffer *pFrameBuffer, BvrBitmap const *pBitmap,
+                  uint16_t x, uint16_t y);
 
 /**
  * 绘制 3D 图元（直接模式）
