@@ -51,8 +51,10 @@ typedef enum eBvrCullMode {
  * @param pPixelData 输出像素数据
  * @return false 表示裁剪该图元Bv
  */
-typedef bool (*BvrVertexShader)(void const *pUniform, void const *pVertex,
-                                BvrVec4f const *pPosition, void *pPixelData);
+typedef bool (*BvrVertexShader)(void const *pUniform,
+                                void const *pVertex,
+                                BvrVec4f const *pPosition,
+                                void *pPixelData);
 
 /**
  * 插值器：使用重心坐标插值三角形的像素数据
