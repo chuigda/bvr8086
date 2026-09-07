@@ -19,8 +19,7 @@ void BvrImpPutPixel(BvrFrameBuffer *pFrameBuffer, uint16_t x, uint16_t y,
       uint8_t r = (uint8_t)(color.r * 7.0f);
       uint8_t g = (uint8_t)(color.g * 7.0f);
       uint8_t b = (uint8_t)(color.b * 3.0f);
-      uint8_t *fb8 = (uint8_t *)pFrameBuffer->framebuffer;
-      fb8[offset] = (r << 5) | (g << 2) | b;
+      pFrameBuffer->framebuffer[offset] = (r << 5) | (g << 2) | b;
       break;
     }
     case 15: {
@@ -43,7 +42,10 @@ void BvrImpPutPixel(BvrFrameBuffer *pFrameBuffer, uint16_t x, uint16_t y,
       uint8_t r = (uint8_t)(color.r * 255.0f);
       uint8_t g = (uint8_t)(color.g * 255.0f);
       uint8_t b = (uint8_t)(color.b * 255.0f);
-      pFrameBuffer->framebuffer[offset] = (r << 16) | (g << 8) | b;
+      uint8_t *pixel = (uint8_t *)pFrameBuffer->framebuffer + offset * 3;
+      pixel[0] = b;
+      pixel[1] = g;
+      pixel[2] = r;
       break;
     }
     default: assert(false && "Unsupported color depth");

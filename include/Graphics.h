@@ -24,8 +24,8 @@ typedef struct stBvrFrameBuffer {
   uint16_t width;
   uint16_t height;
   uint8_t colorDepth;
-
-  uint32_t framebuffer[0];
+  uint8_t : 8;
+  uint8_t framebuffer[0];
 } BvrFrameBuffer;
 
 /** 深度缓冲 */
