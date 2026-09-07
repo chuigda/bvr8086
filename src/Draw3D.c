@@ -23,7 +23,7 @@ BvrCreateDepthBuffer(BvrFrameBuffer const *pFrameBuffer) {
   if (!pDepthBuffer) {
     return NULL;
   }
-  memset(pDepthBuffer + 1, 0, size);
+  memset(pDepthBuffer, 0, sizeof(BvrDepthBuffer) + size);
   pDepthBuffer->mode = pFrameBuffer->mode;
   return pDepthBuffer;
 }
