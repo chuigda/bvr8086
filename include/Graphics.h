@@ -151,6 +151,41 @@ void BvrPutPixel(BvrFrameBuffer *pFrameBuffer, uint16_t x, uint16_t y,
 typedef struct stBvrBitmap BvrBitmap;
 
 /**
+ * 在帧缓冲中绘制线段
+ * @param pFrameBuffer 帧缓冲
+ * @param x0 起点横坐标
+ * @param y0 起点纵坐标
+ * @param x1 终点横坐标
+ * @param y1 终点纵坐标
+ * @param color 线段颜色 RGB [0.0f, 1.0f]
+ */
+void BvrLine(BvrFrameBuffer *pFrameBuffer, uint16_t x0, uint16_t y0,
+             uint16_t x1, uint16_t y1, BvrColor3f color);
+
+/**
+ * 在帧缓冲中绘制水平线段
+ * @param pFrameBuffer 帧缓冲
+ * @param x0 起点横坐标
+ * @param x1 终点横坐标
+ * @param y 纵坐标
+ * @param length 线段长度
+ * @param color 线段颜色 RGB [0.0f, 1.0f]
+ */
+void BvrLineX(BvrFrameBuffer *pFrameBuffer, uint16_t x0, uint16_t x1,
+              uint16_t y, BvrColor3f color);
+
+/**
+ * 在帧缓冲中绘制垂直线段
+ * @param pFrameBuffer 帧缓冲
+ * @param x 横坐标
+ * @param y0 起点纵坐标
+ * @param y1 终点纵坐标
+ * @param color 线段颜色 RGB [0.0f, 1.0f]
+ */
+void BvrLineY(BvrFrameBuffer *pFrameBuffer, uint16_t x, uint16_t y0,
+              uint16_t y1, BvrColor3f color);
+
+/**
  * 在帧缓冲中绘制位图
  * @param pFrameBuffer 帧缓冲
  * @param pBitmap 位图
@@ -159,6 +194,18 @@ typedef struct stBvrBitmap BvrBitmap;
  */
 void BvrPutBitmap(BvrFrameBuffer *pFrameBuffer, BvrBitmap const *pBitmap,
                   uint16_t x, uint16_t y);
+
+/**
+ * 在帧缓冲中绘制位图-带旋转
+ * @param pFrameBuffer 帧缓冲
+ * @param pBitmap 位图
+ * @param x 位图中心横坐标
+ * @param y 位图中心纵坐标
+ * @param angle 旋转角度（弧度）
+ */
+void BvrPutBitmapRotated(BvrFrameBuffer *pFrameBuffer,
+                         BvrBitmap const *pBitmap, uint16_t x,
+                         uint16_t y, float angle);
 
 /**
  * 绘制 3D 图元（直接模式）
