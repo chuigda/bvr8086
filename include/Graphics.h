@@ -146,7 +146,7 @@ BvrDepthBuffer *BvrCreateDepthBuffer(BvrFrameBuffer const *pFrameBuffer);
 /**
  * 绘制 3D 图元（直接模式）
  * @param pFrameBuffer 帧缓冲
- * @param pDepthBuffer 深度缓冲
+ * @param pDepthBuffer 深度缓冲，可为 NULL
  * @param pPipeline 图形管线
  * @param pVertices 顶点数组
  * @param nVertices 顶点数量
@@ -159,7 +159,7 @@ void BvrDraw3D(BvrFrameBuffer *pFrameBuffer,
 /**
  * 绘制 3D 图元（索引模式）
  * @param pFrameBuffer 帧缓冲
- * @param pDepthBuffer 深度缓冲
+ * @param pDepthBuffer 深度缓冲，可为 NULL
  * @param pPipeline 图形管线
  * @param pVertices 顶点数组
  * @param pIndices 索引数组

@@ -4,7 +4,7 @@
 #include <string.h>
 #include <math.h>
 
-#include "PtrMath.h"
+#include "Common.h"
 #include "GraphImp.h"
 
 static void NormalisePositions(BvrVec4f *pPosition);
@@ -32,84 +32,6 @@ void BvrDraw3D(BvrFrameBuffer *pFrameBuffer,
                BvrDepthBuffer *pDepthBuffer,
                BvrGraphicsPipeline const *pPipeline,
                void const *pVertices, uint32_t nVertices) {
-  BvrVec4f position[3];
-  void *pPixelDataArray = alloca(pPipeline->pixelDataStride * 3);
-  void *pPixelDataInterp = alloca(pPipeline->pixelDataStride);
-
-  for (uint32_t i = 0; i < nVertices; i += 3) {
-    bool emitGlyph = true;
-
-    for (uint32_t j = 0; j < 3; j += 1) {
-      uint32_t vertexOffset = (i + j) * pPipeline->vertexStride;
-      uint32_t positionOffset = j * 4;
-      uint32_t pixelDataOffset = j * pPipeline->pixelDataStride;
-
-      void const *pVertexData = PTR_ADD(pVertices, vertexOffset);
-      BvrVec4f *pPosition = &position[j];
-      void *pPixelData = PTR_ADD(pPixelDataArray, pixelDataOffset);
-
-      emitGlyph &= pPipeline->vertexShader(pPipeline->pUniform,
-                                           pVertexData, pPosition,
-                                           pPixelData);
-      if (!emitGlyph) {
-        break;
-      }
-
-      NormalisePositions(pPosition);
-    }
-
-    if (!emitGlyph) {
-      continue;
-    }
-
-    BvrVec4f p1p2 = BvrVecSub4f(position[1], position[0]);
-    BvrVec4f p2p3 = BvrVecSub4f(position[2], position[1]);
-    BvrVec3f normal = BvrVecCross4f(p1p2, p2p3);
-    if ((normal.z > 0.0f && pPipeline->cullMode == BVR_CULL_CCW)
-        || (normal.z < 0.0f && pPipeline->cullMode == BVR_CULL_CW)) {
-      continue;
-    }
-
-    float minX, maxX, minY, maxY;
-    MinMaxXY(&position, &minX, &maxX, &minY, &maxY);
-    uint16_t minXi = minX * pFrameBuffer->mode.width;
-    uint16_t maxXi = maxX * pFrameBuffer->mode.width;
-    uint16_t minYi = minY * pFrameBuffer->mode.height;
-    uint16_t maxYi = maxY * pFrameBuffer->mode.height;
-
-    for (uint16_t y = minYi; y <= maxYi; y += 1) {
-      for (uint16_t x = minXi; x <= maxXi; x += 1) {
-        float xf = (float)x / pFrameBuffer->mode.width;
-        float yf = (float)y / pFrameBuffer->mode.height;
-
-        BvrVec4f pixel = (BvrVec4f){ xf, yf, 0.0f, 1.0f };
-        float barycentric[3];
-        Barycentric(&position, &pixel, &barycentric);
-
-        if (barycentric[0] < 0.0f
-            || barycentric[1] < 0.0f
-            || barycentric[2] < 0.0f) {
-          continue;
-        }
-
-        void* pPixelData[3] = {
-          pPixelDataArray,
-          PTR_ADD(pPixelDataArray, pPipeline->pixelDataStride),
-          PTR_ADD(pPixelDataArray, 2 * pPipeline->pixelDataStride)
-        };
-
-        pPipeline->interpolate((void const* (*)[3])&pPixelData,
-                               &barycentric,
-                               pPixelDataArray);
-
-        BvrColor3f color;
-        if (pPipeline->fragmentShader(pPipeline->pUniform, &pixel,
-                                      pPixelDataArray, &color)) {
-          BvrImpPutPixel(pFrameBuffer, x, y, color);
-        }
-      }
-    }
-  }
 }
 
 static void NormalisePositions(BvrVec4f *pPosition) {
