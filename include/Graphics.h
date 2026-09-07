@@ -186,28 +186,6 @@ void BvrLineY(BvrFrameBuffer *pFrameBuffer, uint16_t x, uint16_t y0,
               uint16_t y1, BvrColor3f color);
 
 /**
- * 在帧缓冲中绘制位图
- * @param pFrameBuffer 帧缓冲
- * @param pBitmap 位图
- * @param x 位图左上角横坐标
- * @param y 位图左上角纵坐标
- */
-void BvrPutBitmap(BvrFrameBuffer *pFrameBuffer, BvrBitmap const *pBitmap,
-                  uint16_t x, uint16_t y);
-
-/**
- * 在帧缓冲中绘制位图-带旋转
- * @param pFrameBuffer 帧缓冲
- * @param pBitmap 位图
- * @param x 位图中心横坐标
- * @param y 位图中心纵坐标
- * @param angle 旋转角度（弧度）
- */
-void BvrPutBitmapRotated(BvrFrameBuffer *pFrameBuffer,
-                         BvrBitmap const *pBitmap, uint16_t x,
-                         uint16_t y, float angle);
-
-/**
  * 绘制 3D 图元（直接模式）
  * @param pFrameBuffer 帧缓冲
  * @param pDepthBuffer 深度缓冲，可为 NULL
