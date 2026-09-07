@@ -234,12 +234,12 @@ void BvrDraw3D(BvrFrameBuffer *pFrameBuffer,
  *        若为 NULL 则顶点着色器结果将存储于 alloca 分配的栈空间中，
  *        可能产生重复计算，影响性能
  */
-void BvrDraw3DIndirect(BvrFrameBuffer *pFrameBuffer,
-                       BvrDepthBuffer *pDepthBuffer,
-                       BvrGraphicsPipeline const *pPipeline,
-                       void const *pVertices, uint16_t const *pIndices,
-                       uint32_t nVertices, uint32_t nIndices,
-                       void *pPixelDataStorage);
+void BvrDraw3DIndexed(BvrFrameBuffer *pFrameBuffer,
+                      BvrDepthBuffer *pDepthBuffer,
+                      BvrGraphicsPipeline const *pPipeline,
+                      void const *pVertices, uint16_t const *pIndices,
+                      uint32_t nVertices, uint32_t nIndices,
+                      void *pPixelDataStorage);
 
 #ifdef __cplusplus
 } /* extern "C" */
