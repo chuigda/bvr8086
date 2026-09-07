@@ -4,6 +4,8 @@
 #include <stdint.h>
 #include <stdbool.h>
 
+#include "LinAlg.h"
+
 #ifdef __cplusplus
 extern "C" {
 #endif
@@ -60,7 +62,7 @@ void BvrCloseGraphics(void);
  * @param color 像素颜色 RGB [0.0f, 1.0f]
  */
 void BvrPutPixel(BvrFrameBuffer *pFrameBuffer, uint16_t x, uint16_t y,
-                 float color[3]);
+                 BvrColor3f color);
 
 typedef struct stBvrBitmap BvrBitmap;
 
@@ -80,10 +82,10 @@ void BvrPutBitmap(BvrFrameBuffer *pFrameBuffer, BvrBitmap const *pBitmap,
  * @param pVertex 输入顶点数据
  * @param pPosition 输出位置（NDC 齐次坐标）
  * @param pPixelData 输出像素数据
- * @return false 表示裁剪该图元
+ * @return false 表示裁剪该图元Bv
  */
 typedef bool (*BvrVertexShader)(void const *pUniform, void const *pVertex,
-                                float (*pPosition)[4], void *pPixelData);
+                                BvrVec4f const *pPosition, void *pPixelData);
 
 /**
  * 插值器：使用重心坐标插值三角形的像素数据
@@ -105,9 +107,9 @@ typedef void (*BvrInterpolate)(void const* (*pPixelData)[3],
  * @return false 表示丢弃该片段
  */
 typedef bool (*BvrFragmentShader)(void const *pUniform,
-                                  float const (*pPosition)[4],
+                                  BvrVec4f const *pPosition,
                                   void const* pPixelData,
-                                  float (*pColor)[3]);
+                                  BvrColor3f *pColor);
 
 /** 背面剔除模式 */
 typedef enum eBvrCullMode {
